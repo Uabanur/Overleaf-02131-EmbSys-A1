@@ -1,0 +1,18 @@
+We have successfully implemented the QRS algorithm in C. Data acquisition, data filtering and peak detection are handled much faster than the data is produced in real-time. The C code is relatively small (in the order of KB), and the program has relatively low energy consumption. Hence we determine that it is indeed reasonable to implement the algorithm in an embedded system.
+
+\subsection{Discussion}
+When implementing the QRS algorithm, we realized an ambiguity in the flowchart supplied by the assignment. When the \texttt{searchback} function found a peak (peak2), the current RR value is the interval from the previous Rpeak to the next peak stronger than \texttt{THRESHOLD1}. This RR value is \underline{not} the peak stored in \texttt{Rpeak}.
+
+Every time an average is calculated (in moving window integration filter, \texttt{RecentRR} and \texttt{RecentRR\_OK}) the array is summed and divided by the number of elements. This is a resource-heavy computation. A more elegant implementation would be to update the average (a sum) with only two calculations: Adding the difference between the new and oldest values, divided by the number of elements averaged over. Example:
+
+\begin{lstlisting}
+sum = sum + (newElement - oldestElement)/N;
+\end{lstlisting}
+
+One of the best decisions during this project was to put all data in \texttt{data} and use pointers as function parameters, minimizing data transfer and maximizing accessibility. 
+
+\subsection{Which parts of the program be implemented in hardware?}
+We expect that the data filtering can be implemented in hardware. The filtering uses integer addition and integer multiplication, and several numbers (for independent filters) be calculated simultaneously. 
+
+% send filer: c og h
+% hvis projekt: check image

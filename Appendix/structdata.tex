@@ -1,0 +1,51 @@
+\subsection{Appendix B: struct DATA data}
+\label{Apx:B}
+\begin{multicols}{2}
+
+\begin{lstlisting}
+typedef struct DATA{
+// stores all variables
+    
+    // ints
+    int peakCheck;
+    int lastCheck;
+    int peakValue;
+    int bpm;
+    int iteration;
+    int lastRpeakTime;
+    int missIntervalCounter;
+    int RR;
+    int RpeakCounter;
+    int lastPeak;
+    int peak2;
+    
+    // doubles for peak detection
+    double SPKF;
+    double NPKF;
+    double THRESHOLD1;
+    double THRESHOLD2;
+    double RR_AVERAGE1;
+    double RR_AVERAGE2;
+    double RR_LOW;
+    double RR_HIGH;
+    double RR_MISS;
+
+    // arrays for QRS algorithm, and data
+    int RecentRR[8];
+    int RecentRR_OK[8];
+    int peaks[ARRAY_LENGTH];
+    int peakTimeStamps[ARRAY_LENGTH];
+    int Rpeak [ARRAY_LENGTH];
+    int originalArray[ARRAY_LENGTH];
+    int afterLowPass[ARRAY_LENGTH];
+    int afterHighPass[ARRAY_LENGTH];
+    int afterDerivAndSquare[ARRAY_LENGTH];
+    int filteredData[ARRAY_LENGTH];
+    
+    // pointer to .txt file
+    FILE *fp;
+    
+} DATA;
+\end{lstlisting}
+
+\end{multicols}

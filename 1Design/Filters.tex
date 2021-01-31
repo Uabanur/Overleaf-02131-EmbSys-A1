@@ -1,0 +1,62 @@
+\subsection{Filters}
+In \texttt{filters.c}, five filters are applied: low-pass, high-pass, derivative, squaring, and moving window integration. In the following section, we present the filter equation, the purpose of the filters, and how we translated the equations to functions in \texttt{C}. 
+
+\subsubsection{Low-pass filter}
+If we reconstruct the signal using sine waves (Fourier series), we can choose to filter out sine waves with frequencies too high or too low to reasonably represent a QRS complex. The low-pass filter used has a cutoff frequency of $\approx$ 12 Hz, and is represented by the following difference equation:
+
+\begin{equation}
+    y_n = 2y_{n-1} - y_{n-2} + \frac{1}{32} \cdot (x_n - 2x_{n-6} + x_{n-12})
+\end{equation}
+
+\subsubsection{High-pass}
+The high-pass filter used has a cutoff frequency of $\approx$ 6 Hz, and is represented by the difference equation below. After the data has been through the low-pass and high-pass filters, the remaining signal (in the frequency domain) is centered around 5-20 Hz due to the continuous cutoffs. 
+\begin{equation}
+    y_n = y_{n-1} -\frac{x_n}{32} + x_{n-16} - x_{n-17} + \frac{x_{n-32}}{32}
+\end{equation}
+
+\subsubsection{Derivative}
+Now the signal is differentiated, since we are interested in the slope, and most importantly: when the peak (maximum) occurs in the time-domain. 
+\begin{equation}
+    y_n = \frac{1}{8} \cdot (2x_n + x_{n-1} - x_{n-3} - 2x_{n-4} )
+\end{equation}
+
+\subsubsection{Squaring}
+Now all values are squared to emphasize large differences in the original data, and to make all values positive.
+\begin{equation}
+    y_n = x_n^2
+\end{equation}
+
+\subsubsection{Moving window integration}
+Finally the signal is integrated over the past $N = 30$ signal values. This is achieved by the difference equation below:
+\begin{equation}
+    y_n = \frac{1}{N} (x_{n- (N-1)}  + x_{n-(N-2)} + ... +  x_n )
+\end{equation}
+
+By differentiating, squaring, and then integrating, the filtered data signal is comparable to the original signal; the values represent an amplitude (as a function of time). Each filter causes a delay, e.g. we only obtain the final filtered data point $y_n$ after applying the last filter to the previous 30 data points. See Appendix \eqref{Apx:A} to see how the filters alter the original signal.
+
+\subsubsection{Filters in C}
+The function \texttt{filterData} in \texttt{main.c} calls the filter functions in the correct order, by passing memory addresses to arrays, and an int representing the array length. \\
+\\
+We combined the derivative and squaring filters, and added a function that shifts the array, similar to the \texttt{HackerRank} rotating circular array exercise. After an array has been shifted, the penultimate and ultimate values are identical, so the array is ready for a new value. The following code summarizes how we invoke the filtering in \texttt{main.c}:
+
+\begin{lstlisting}
+void filterData(DATA *data){
+    shiftArray(data->afterLowPass, ARRAY_LENGTH);
+    // applies low pass filter
+    data->afterLowPass[ARRAY_LENGTH-1] = lowPassFilter(data->afterLowPass, data->originalArray, ARRAY_LENGTH);
+...}
+\end{lstlisting}
+
+\texttt{data} is the struct containing all relevant variables: integers, doubles, arrays. The arrays are named after which filter has been applied most recently.
+filterData is of type void; it only calls the other filter functions. The filter functions are kept as close to the template as possible, e.g. compare the low pass filter equation with the function \texttt{lowPassFilter}:
+
+\begin{equation}
+    y_n = 2 y_{n-1} - y_{n-2} + (x_n + 2x_{n-6}+ x_n{-12})/32
+\end{equation}
+
+\begin{lstlisting}
+int lowPassFilter(int * y, int * x, int n){
+    return 2*y[n-1] - y[n-2] + (x[n] - 2*x[n-6] + x[n-12])/32;
+}
+\end{lstlisting}
+

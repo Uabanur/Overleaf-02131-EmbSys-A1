@@ -1,0 +1,13 @@
+\subsection{Data types}
+As mentioned several times, all variables are stored in the \texttt{struct DATA}\footnote{The complete struct is found in Appendix \eqref{Apx:B}} called \texttt{data}, typedefined in \texttt{qsr.h}. 
+\texttt{data} contains 31 variables. Variables connected to filtering are kept as integers (or integer arrays) so that they may be implemented in hardware in a later project. \\
+\\
+\texttt{DATA} is typedefined in \texttt{qsr.h} so that most function prototypes in \texttt{qsr.h} and function headers in \texttt{qsr.c} only need one argument, the pointer \texttt{*data}:
+
+\begin{lstlisting}
+void peakDetection(DATA *data);
+\end{lstlisting}
+
+This minimized the number of arguments passed between functions, and maximized the use of pass-by-reference.\\ 
+\\
+Variables used in the QRS algorithm generally fall into two categories, integers and doubles. Integers for counters and timestamps. Doubles for parameters like thresholds, averages of RR values. The variables used for data filtering and peak detection are initialized in \texttt{main.c}. RR intervals are set to 150 so that noise at the start of the \texttt{.txt} file are not interpreted as peaks.\\

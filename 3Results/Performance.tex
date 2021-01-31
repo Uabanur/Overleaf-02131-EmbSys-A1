@@ -1,0 +1,30 @@
+\subsection{Performance}
+\subsubsection{Run-time}
+In order to analyze the program performance, several time measurements are performed. \\
+\\
+Measurement \#1: The time it takes to scan all data points individually from \texttt{ECG.txt}, and store the value in \texttt{originalArray} without any further analysis. The average time of 1000 runs for scanning data is 0.001166 s $=$ 1.17 ms. \\
+\\
+Measurement \#2: How long it takes to scan all data points and filter the data. The average time of 1000 runs is 0.006607 s $=$ 6.61 ms. Data filtering takes 6.61 ms $-$ 1.17 ms $=$ 5.44 ms. \\
+\\
+Measurement \#3: The time of scanning data points, filtering data and performing peak detection. The average time of 1000 runs is 0.006626 s $=$ 6.63 ms. Peak detection takes 6.63 ms $-$ 6.61 ms $=$ 0.02 ms.\\
+\\
+Measurement \#4: The time of scanning data points, filtering data, performing peak detection and outputting data to the user. The average time of 1000 runs is 0.008218 s $=$ 8.22 ms. Printing data to the user takes 8.22 ms $-$ 6.63 ms $=$ 1.59 ms.\\
+\\
+
+\begin{table}[H]
+\centering
+    \label{tab:performance_time}
+    \begin{tabular}{ccccc}
+    \hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Scan \\ data points\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Filter \\ data points\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Peak\\ detection\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Print info\\ to user\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{Time (ms)} & \multicolumn{1}{c|}{1.17} & \multicolumn{1}{c|}{5.44} & \multicolumn{1}{c|}{0.02} & \multicolumn{1}{c|}{1.59} \\ \hline
+\multicolumn{1}{|c|}{Runtime \%} & \multicolumn{1}{c|}{14.2} & \multicolumn{1}{c|}{66.2} & \multicolumn{1}{c|}{0.002} & \multicolumn{1}{c|}{19.3} \\ \hline                          
+    \end{tabular}
+\caption{Runtime values and percentages for different program segments}
+\end{table}
+
+
+This clearly shows that the filtering is the slowest part of the program, and that it would be reasonable to move data filtering to the hardware (and optimize filtering functions). Peak detection is remarkably quick. This is understandable: the main part of peak detection is only run if a peak is found. Otherwise it only performs one comparison and increments a counter.
+
+\subsubsection{Energy consumption}
+These time measurements are performed on a MacBook pro on a 2.7 GHz Intel Core i5 processor with a 35 W TDP divided on two cores, resulting in a complete energy consumption of 8.22 ms $\cdot$ 35 W$\cdot \frac{1}{2}=$ 0.15 J for the complete data set. 

@@ -1,0 +1,10 @@
+\subsection{Output}
+If the heart rhythm is unstable, \texttt{qsr.c} prints a warning: "WEAK HEARTBEAT" if the R-peak value is less than 2000; "UNSTABLE RHYTHM" if 5 successive RR-intervals have missed the \texttt{RR\_LOW} and \texttt{RR\_HIGH}. \\
+\\
+Notice that this warning is triggered by e.g. 5 quick peaks in a row, or 5 slow peaks in a row, but also if the peak-to-peak distance alternates: quick, quick, slow, quick, slow. Hence the term \textit{unsteady} is well chosen.\\
+\\
+The data regularly presented to the user (not warnings) is peak amplitude, current time peak was detected and the current heart rate (BPM):\\
+\\
+\textbf{Peak amplitude} is the signal intensity for the given Rpeak. \\
+\textbf{Current time} is calculated using how long the program has run (iterations), and the frequency of the sensor. \\
+\textbf{BPM} is found using the frequency of the sensor, \texttt{RR\_AVERAGE1} for average heart rate, and converting to minutes instead of seconds. If no new Rpeak is found, BPM is set to zero. 

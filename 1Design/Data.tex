@@ -1,0 +1,16 @@
+\subsection{Data}
+In the real world, data from a personal ECG scanner is acquired continuously, one data point at a time. As a consequence, our program must be able to continuously acquire, filter, and process data. In order to show warnings in real time, the program must process data faster than it is acquired. \\ We simulated this by reading data points one-by-one, from a \texttt{.txt} file containing signal amplitudes. The data points are stored in a 33-point \color{blue} \texttt{int} \color{black} array called \texttt{originalArray} located in a struct called \texttt{data}. All values in \texttt{originalArray} are initialized to 0. With these initial values, the first $\approx$ 30 filtered data points are calculated using zeros, so with a sample rate of 250 Hz, the data acquisition causes a $\frac{30}{250 \, \si{Hz}} =$ 12 ms startup delay. The rewritten code below summarizes our data acquisition.
+
+
+\begin{lstlisting}
+ FILE* file = fopen("ECG.txt", "r"); // File pointer for input from file
+while(fscanf(file, "%i", &(data.originalArray[ARRAY_LENGTH - 1])) != EOF){
+        // body of main loop
+        ...
+        }
+\end{lstlisting}
+
+The loop header attempts to read a new data point, and if it succeeds (we're not at the end of the \texttt{.txt} file), the loop is executed. The bulk of the program execution happens within this \color{blue} \texttt{while} \color{black} loop: For each new data point acquired, the functions handling filtering and peak detection are called. The data points are sent to filters using \textbf{pass by reference}.
+%  Hvordan opsamles og gemmes data til filtrene
+
+
